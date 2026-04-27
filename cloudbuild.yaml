@@ -1,0 +1,25 @@
+steps:
+  # Docker Build
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["build", "-t", "asia.gcr.io/$PROJECT_ID/new-api:$SHORT_SHA", "."]
+
+  # Docker push to Google Artifact Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "asia.gcr.io/$PROJECT_ID/new-api:$SHORT_SHA"]
+
+  # Deploy to Cloud Run
+  - name: "gcr.io/cloud-builders/gcloud"
+    entrypoint: /bin/bash
+    args:
+      - -c
+      - |
+        ./rollout.sh asia.gcr.io/$PROJECT_ID/new-api:$SHORT_SHA
+    env:
+      - COMPUTE_REGION=${_COMPUTE_REGION}
+      - DEPLOY_ENV=${_DEPLOY_ENV}
+      - SERVICE_NAME=${_SERVICE_NAME}
+
+# Store images in Google Artifact Registry
+images:
+  - asia.gcr.io/$PROJECT_ID/new-api:$SHORT_SHA
