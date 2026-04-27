@@ -14,6 +14,7 @@ steps:
     args:
       - -c
       - |
+        chmod +x ./rollout.sh
         ./rollout.sh asia.gcr.io/$PROJECT_ID/new-api:$SHORT_SHA
     env:
       - COMPUTE_REGION=${_COMPUTE_REGION}
