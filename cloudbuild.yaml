@@ -14,12 +14,16 @@ steps:
     args:
       - -c
       - |
+        chmod +x ./rollout.sh
         ./rollout.sh asia.gcr.io/$PROJECT_ID/new-api:$SHORT_SHA
     env:
       - COMPUTE_REGION=${_COMPUTE_REGION}
       - DEPLOY_ENV=${_DEPLOY_ENV}
       - SERVICE_NAME=${_SERVICE_NAME}
-
+      
+options:
+    logging: CLOUD_LOGGING_ONLY
+    
 # Store images in Google Artifact Registry
 images:
   - asia.gcr.io/$PROJECT_ID/new-api:$SHORT_SHA
