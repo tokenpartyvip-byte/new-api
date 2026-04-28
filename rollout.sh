@@ -7,7 +7,7 @@ env
 SERVICE_NAME="${SERVICE_NAME:-new-api}"
 services=("$SERVICE_NAME")
 
-COMPUTE_REGION="${COMPUTE_REGION:-asia-east2}"
+COMPUTE_REGION="${COMPUTE_REGION:-asia-east1}"
 DEPLOY_ENV="${DEPLOY_ENV:-testnet}"
 ADDITIONAL_FLAGS=""
 env=""
