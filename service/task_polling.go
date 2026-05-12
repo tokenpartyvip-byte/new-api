@@ -398,6 +398,27 @@ func updateVideoSingleTask(ctx context.Context, adaptor TaskPollingAdaptor, ch *
 
 	now := time.Now().Unix()
 	if taskResult.Status == "" {
+		var videoResp struct {
+			Object string `json:"object"`
+			Status string `json:"status"`
+			TaskID string `json:"task_id"`
+		}
+
+		if err := common.Unmarshal(responseBody, &videoResp); err == nil {
+
+			if videoResp.Object == "video" {
+
+				taskResult.Status = videoResp.Status
+
+				// queued/running 都视为正常任务
+				if taskResult.Status == "queued" ||
+					taskResult.Status == "processing" ||
+					taskResult.Status == "running" {
+
+					return nil
+				}
+			}
+		}
 		//taskResult = relaycommon.FailTaskInfo("upstream returned empty status")
 		errorResult := &dto.GeneralErrorResponse{}
 		if err = common.Unmarshal(responseBody, &errorResult); err == nil {
