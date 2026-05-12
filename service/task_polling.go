@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -397,6 +398,10 @@ func updateVideoSingleTask(ctx context.Context, adaptor TaskPollingAdaptor, ch *
 	logger.LogDebug(ctx, fmt.Sprintf("updateVideoSingleTask taskResult: %+v", taskResult))
 
 	now := time.Now().Unix()
+	if bytes.Contains(responseBody, []byte(`"object":"video"`)) {
+		taskResult.Status = model.TaskStatusSuccess
+		return nil
+	}
 	if taskResult.Status == "" {
 		//taskResult = relaycommon.FailTaskInfo("upstream returned empty status")
 		errorResult := &dto.GeneralErrorResponse{}
